@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+
 
 class AccountController extends Controller
 {
@@ -59,12 +61,11 @@ class AccountController extends Controller
         ]);
 
         if ($validator->passes()) {
-            if(Auth::attempt(['email'=>$request->email,'password'=>$request->password])){
+            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
                 return redirect()->route('account.profile');
-            }else{
-                return redirect()->route('account.login')->with('error','Either Email/Password is incorrect');
+            } else {
+                return redirect()->route('account.login')->with('error', 'Either Email/Password is incorrect');
             }
-
         } else {
             return redirect()->route('account.login')->withErrors($validator)->withInput($request->only('email'));
         }
@@ -72,48 +73,85 @@ class AccountController extends Controller
 
     public function profile()
     {
-        $id=Auth::user()->id;
+        $id = Auth::user()->id;
 
-        $user=User::where('id',$id)->first();
+        $user = User::where('id', $id)->first();
 
 
-        return view('account.profile',[
-            'user'=>$user
+        return view('account.profile', [
+            'user' => $user
         ]);
     }
 
-    public function updateProfile(Request $request){
-        $id=Auth::user()->id;
-        $validator= Validator::make($request->all(),[
-            'name'=> 'required|min:5|max:20',
-            'email'=>'required|email|unique:users,email,'.$id.',id'
+    public function updateProfile(Request $request)
+    {
+        $id = Auth::user()->id;
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:5|max:20',
+            'email' => 'required|email|unique:users,email,' . $id . ',id',
         ]);
 
-        if($validator->passes()){
-            $user= user::find($id);
-            $user->name= $request->name;
-            $user->email= $request->email;
-            $user->designation= $request->designation;
-            $user->mobile= $request->mobile;
+        if ($validator->passes()) {
+            $user = user::find($id);
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->designation = $request->designation;
+            $user->mobile = $request->mobile;
             $user->save();
 
-            session()->flash('success','Profile updated successfully');
+            session()->flash('success', 'Profile updated successfully');
 
             return response()->json([
-                'status'=> true,
+                'status' => true,
                 'errors' => []
             ]);
-
-
-        }else{
+        } else {
             return response()->json([
-                'status'=> false,
+                'status' => false,
                 'errors' => $validator->errors()
             ]);
         }
     }
 
-    public function logout(){
+
+
+    public function updateProfilePic(Request $request)
+    {
+
+        $id = Auth::user()->id;
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image'
+        ]);
+
+        if ($validator->passes()) {
+            $image = $request->image;
+            $ext = $image->getClientOriginalExtension();
+            $imageName = $id . '-' . time() . '.' . $ext;
+
+            $image->move(public_path('/Profile_pic'), $imageName);
+
+            //Delete old Profile Pic
+            File::delete(public_path('/Profile_pic/'.Auth::user()->image));
+
+            //Database upload
+            User::where('id', $id)->update(['image' => $imageName]);
+
+            session()->flash('success', 'Profile picture update successfully');
+            return response()->json([
+                'status' => true,
+                'errors' => []
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors()
+            ]);
+        }
+    }
+
+
+    public function logout()
+    {
         Auth::logout();
         return redirect()->route('account.login');
     }

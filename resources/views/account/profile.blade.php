@@ -7,7 +7,7 @@
                 <div class="col">
                     <nav aria-label="breadcrumb" class=" rounded-3 p-3 mb-4">
                         <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('/') }}">Home</a></li>
                             <li class="breadcrumb-item active">Account Settings</li>
                         </ol>
                     </nav>
@@ -22,8 +22,7 @@
                         <div class="alert alert-success mb-2 pb-0">
                             <p>{{ Session::get('success') }}</p>
                         </div>
-
-                        @endif
+                    @endif
                     <div class="card border-0 shadow mb-4">
 
                         <form action="" method="post" id="userForm" name="userForm">
@@ -85,29 +84,7 @@
             </div>
         </div>
     </section>
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title pb-0" id="exampleModalLabel">Change Profile Picture</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="exampleInputEmail1" class="form-label">Profile Image</label>
-                            <input type="file" class="form-control" id="image" name="image">
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary mx-3">Update</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
 
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 @section('customjs')
     <script type="text/javascript">
@@ -148,7 +125,7 @@
                         $("#email").removeClass('is-invalid').siblings('p').removeClass(
                                 'invalid-feedback')
                             .html('');
-                            window.location.href='{{ route('account.profile') }}';
+                        window.location.href = '{{ route('account.profile') }}';
                     }
                 }
             });
