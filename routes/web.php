@@ -43,5 +43,6 @@ Route::group(['account'], function () {
         Route::post('/account/update-profile-pic', [AccountController::class, 'updateProfilePic'])->name('account.updateProfilePic');
         Route::get('/account/post-Job', [AccountController::class, 'postJob'])->name('account.postJob');
         Route::post('/account/process-PostJob', [AccountController::class, 'processPostJob'])->name('account.processPostJob');
+        Route::get('/my-jobs',[AccountController::class,'myjobs'])->name('account.myjobs');
     });
 });

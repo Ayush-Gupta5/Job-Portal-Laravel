@@ -236,7 +236,7 @@
                         .html('');
 
                     // Redirect to the desired URL on successful submission
-                    window.location.href = '{{ route("account.postJob") }}';
+                    window.location.href = '{{ route("account.myjobs") }}';
                     }
                 }
             });

@@ -159,9 +159,10 @@ class AccountController extends Controller
         return view('account.postJob',['categories'=>$categories],['jobTypes'=>$jobTypes]);
     }
 
+
     public function processPostJob(Request $request){
 
-
+        $id = Auth::user()->id;
         $validator=Validator::make($request->all(),[
             'title'=>'required|min:5|max:200',
             'category'=>'required',
@@ -178,6 +179,7 @@ class AccountController extends Controller
             $job->title=$request->title;
             $job->category_id=$request->category;
             $job->job_type_id =$request->jobNature;
+            $job->user_id=$id;
             $job->Vacancy=$request->vacancy;
             $job->salary=$request->salary;
             $job->location=$request->location;
@@ -187,10 +189,12 @@ class AccountController extends Controller
             $job->qualification=$request->qualifications;
             $job->keywords=$request->keywords;
             $job->experience=$request->experience;
-            $job->company_name=$request->company_name;$job->company_location=$request->company_location;$job->company_website=$request->website;
+            $job->company_name=$request->company_name;
+            $job->company_location=$request->company_location;
+            $job->company_website=$request->website;
             $job->save();
 
-            session()->flash('success','Your job posted successfully');
+            session()->flash('success','Job added successfully.');
 
             return response()->json([
                 'status'=>true,
@@ -211,4 +215,8 @@ class AccountController extends Controller
     }
 
 
+    public function myjobs()
+    {
+        return view('account.myjobs');
+    }
 }
