@@ -20,10 +20,10 @@
                 <a href="{{ route('account.profile') }}">Account Settings</a>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <a href="{{ route('account.postJob') }}">Post a Job</a>
+                <a href="{{ route('account.job.postJob') }}">Post a Job</a>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                <a href="{{ route('account.myjobs') }}">My Jobs</a>
+                <a href="{{ route('account.job.myjobs') }}">My Jobs</a>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                 <a href="job-applied.html">Jobs Applied</a>

@@ -36,7 +36,7 @@
                                     </div>
                                     <div class="col-md-6  mb-4">
                                         <label for="" class="mb-2">Category<span class="req">*</span></label>
-                                        <select name="category" id="category" class="form-control">
+                                        <select name="category" id="category" class="form-select">
                                             <option value="">Select a Category</option>
                                             @if ($categories->isNotEmpty())
                                                 @foreach ($categories as $category)
@@ -90,17 +90,17 @@
                                         <label for="" class="mb-2">Experience<span class="req">*</span></label>
                                         <select class="form-select" name="experience" id="experience">
                                             <option value="">Select a Experience</option>
-                                            <option>Fresher</option>
-                                            <option>1 Years</option>
-                                            <option>2 Years</option>
-                                            <option>3 Years</option>
-                                            <option>4 Years</option>
-                                            <option>5 Years</option>
-                                            <option>6 Years</option>
-                                            <option>7 Years</option>
-                                            <option>8 Years</option>
-                                            <option>9 Years</option>
-                                            <option>10+ Years</option>
+                                            <option value="0">Fresher</option>
+                                            <option value="1">1 Years</option>
+                                            <option value="2">2 Years</option>
+                                            <option value="3">3 Years</option>
+                                            <option value="4">4 Years</option>
+                                            <option value="5">5 Years</option>
+                                            <option value="6">6 Years</option>
+                                            <option value="7">7 Years</option>
+                                            <option value="8">8 Years</option>
+                                            <option value="9">9 Years</option>
+                                            <option value="10">10+ Years</option>
                                         </select>
                                         <p></p>
                                     </div>
@@ -177,14 +177,15 @@
     <script type="text/javascript">
         $("#postJobForm").submit(function(e) {
             e.preventDefault();
-
+            $("#button[type='submit']").prop('disable',true)
             $.ajax({
 
-                url: '{{ route("account.processPostJob") }}',
+                url: '{{ route("account.job.processPostJob") }}',
                 type: 'post',
                 data: $('#postJobForm').serializeArray(),
                 dataType: 'json',
                 success: function(response) {
+                    $("#button[type='submit']").prop('disable',false)
                     if (response.status == false) {
                         var errors = response.errors;
                         if (errors.title) {
@@ -236,7 +237,7 @@
                         .html('');
 
                     // Redirect to the desired URL on successful submission
-                    window.location.href = '{{ route("account.myjobs") }}';
+                    window.location.href = '{{ route("account.job.myjobs") }}';
                     }
                 }
             });

@@ -41,8 +41,11 @@ Route::group(['account'], function () {
         Route::get('/account.logout', [AccountController::class, 'logout'])->name('account.logout');
         Route::put('/account/update-profile', [AccountController::class, 'updateProfile'])->name('account.updateProfile');
         Route::post('/account/update-profile-pic', [AccountController::class, 'updateProfilePic'])->name('account.updateProfilePic');
-        Route::get('/account/post-Job', [AccountController::class, 'postJob'])->name('account.postJob');
-        Route::post('/account/process-PostJob', [AccountController::class, 'processPostJob'])->name('account.processPostJob');
-        Route::get('/my-jobs',[AccountController::class,'myjobs'])->name('account.myjobs');
+        Route::get('/account/post-Job', [AccountController::class, 'postJob'])->name('account.job.postJob');
+        Route::post('/account/process-PostJob', [AccountController::class, 'processPostJob'])->name('account.job.processPostJob');
+        Route::get('/my-jobs',[AccountController::class,'myjobs'])->name('account.job.myjobs');
+        Route::get('/my-jobs/edit-job/{jobId}',[AccountController::class,'editJob'])->name('account.job.editJob');
+        Route::post('/process-EditJob/{jobId}', [AccountController::class, 'processEditJob'])->name('account.processEditJob');
+        Route::post('/delete-job', [AccountController::class, 'deleteJob'])->name('account.job.deleteJob');
     });
 });
