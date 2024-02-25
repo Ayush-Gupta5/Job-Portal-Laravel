@@ -90,7 +90,7 @@
                                         <label for="" class="mb-2">Experience<span class="req">*</span></label>
                                         <select class="form-select" name="experience" id="experience">
 
-                                            <option value="0"{{ ($job->experience == 0)?  'selected'
+                                            <option value="F"{{ ($job->experience == "F")?  'selected'
                                             : '' }}>Fresher</option>
                                             <option value="1"{{ ($job->experience == 1)?  'selected'
                                             : '' }}>1 Years</option>

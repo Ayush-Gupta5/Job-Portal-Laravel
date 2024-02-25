@@ -90,7 +90,7 @@
                                         <label for="" class="mb-2">Experience<span class="req">*</span></label>
                                         <select class="form-select" name="experience" id="experience">
                                             <option value="">Select a Experience</option>
-                                            <option value="0">Fresher</option>
+                                            <option value="F">Fresher</option>
                                             <option value="1">1 Years</option>
                                             <option value="2">2 Years</option>
                                             <option value="3">3 Years</option>
