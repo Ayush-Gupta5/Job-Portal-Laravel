@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\JobsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +22,7 @@ use App\Http\Controllers\HomeController;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('/');
-
+Route::get('/jobs', [JobsController::class, 'index'])->name('jobs');
 
 
 
@@ -33,6 +34,8 @@ Route::group(['account'], function () {
         Route::post('/account/process-register', [AccountController::class, 'processRegistration'])->name('account.processRegistration');
         Route::post('/account/authenticate', [AccountController::class, 'authenticate'])->name('account.authenticate');
         Route::get('/account/login', [AccountController::class, 'login'])->name('account.login');
+
+
     });
 
     //Authentocate Route
