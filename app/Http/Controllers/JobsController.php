@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\job;
+use App\Models\JobApplication;
 use App\Models\JobType;
+use Illuminate\Support\Facades\Auth;
 
 class JobsController extends Controller
 {
@@ -63,5 +65,57 @@ class JobsController extends Controller
         return view('jobDetail',['jobDetails'=>$jobDetail]);
     }
 
+    public function applyjob(Request $request){
+        $id=$request->id;
 
+        $job = job::where('id',$id)->first();
+
+        //job not found in db
+        if($job==null){
+            session()->flash('error','Job does not exist');
+            return response()->json([
+                'status'=> false,
+                'message'=>'Job does not exist'
+            ]);
+        }
+
+        //you can not apply on your own job
+        $employer_id=$job->user_id;
+
+        if($employer_id == Auth::user()->id){
+            session()->flash('error','You can not apply on your own job');
+            return response()->json([
+                'status'=> false,
+                'message'=>'You can not apply on your own job'
+            ]);
+        }
+
+        //you can not apply on a job twice
+        $jobApplicationCount=JobApplication::where([
+            'user_id'=> Auth::user()->id,
+            'job_id'=>$id
+        ])->count();
+
+        if($jobApplicationCount > 0){
+            session()->flash('error','You already applied on this job');
+            return response()->json([
+                'status'=> false,
+                'message'=>'You already applied on this job'
+            ]);
+        }
+        $application=new JobApplication();
+        $application->job_id=$id;
+        $application->user_id=Auth::user()->id;
+        $application->employer_id=$employer_id;
+        $application->appiled_date=now();
+        $application->save();
+
+
+        $message="You have successfully applied";
+        session()->flash('success',$message);
+            return response()->json([
+                'status'=> true,
+                'message'=>$message
+            ]);
+    }
 }
