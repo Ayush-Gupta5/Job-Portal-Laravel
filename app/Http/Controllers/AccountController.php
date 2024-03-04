@@ -6,6 +6,7 @@ use App\Models\job;
 use App\Models\JobType;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\JobApplication;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -308,5 +309,12 @@ class AccountController extends Controller
         return response()->json([
             'status'=>true,
         ]);
+    }
+
+    public function myJobApplications(){
+
+        $jobApplications=JobApplication::where('user_id',Auth::user()->id)->with('job','job.jobType')->orderBy('appiled_date','desc')->paginate(10);
+
+        return view('account.job.my-job-applications',['jobApplications'=>$jobApplications]);
     }
 }
