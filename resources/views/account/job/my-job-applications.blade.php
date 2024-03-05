@@ -18,6 +18,11 @@
                 @include('sidebar')
             </div>
             <div class="col-lg-9">
+                @if (Session::has('success'))
+                <div class="alert alert-success mb-2 pb-0">
+                    <p>{{ Session::get('success') }}</p>
+                </div>
+                @endif
                 <div class="card border-0 shadow mb-4 p-3">
                     <div class="card-body card-form">
                         <h3 class="fs-4 mb-1">Jobs Applied</h3>
@@ -26,7 +31,7 @@
                                 <thead class="bg-light">
                                     <tr>
                                         <th scope="col">Title</th>
-                                        <th scope="col">Job Created</th>
+                                        <th scope="col">Applied Date</th>
                                         <th scope="col">Applicants</th>
                                         <th scope="col">Status</th>
                                         <th scope="col">Action</th>
@@ -40,19 +45,28 @@
                                             <div class="job-name fw-500">{{ $jobApplication->job->title }}</div>
                                             <div class="info1">{{ $jobApplication->job->jobType->name }} . {{ $jobApplication->job->location }}</div>
                                         </td>
-                                        <td>{{ \Carbon\Carbon::parse($jobApplication->created_at)->format('d M, Y') }}</td>
-                                        <td>130 Applications</td>
+                                        <td>{{ \Carbon\Carbon::parse($jobApplication->appiled_date)->format('d M, Y') }}</td>
+                                        <td>0 Applications</td>
                                         <td>
-                                            <div class="job-status text-capitalize">active</div>
+                                            @if ($jobApplication->job->status==1)
+                                            <div class="job-status text-capitalize">Active</div>
+                                            @else
+                                            <div class="job-status text-capitalize">Block</div>
+                                            @endif
+
                                         </td>
                                         <td>
                                             <div class="action-dots float-end">
-                                                <a href="#" class="" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <button href="#" class="btn" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                                </a>
+                                                </button>
                                                 <ul class="dropdown-menu dropdown-menu-end">
-                                                    <li><a class="dropdown-item" href="job-detail.html"> <i class="fa fa-eye" aria-hidden="true"></i> View</a></li>
-                                                    <li><a class="dropdown-item" href="#"><i class="fa fa-trash" aria-hidden="true"></i> Remove</a></li>
+                                                    <li><a class="dropdown-item" href="{{ route("jobsDetail",$jobApplication->job_id) }}"> <i
+                                                                class="fa fa-eye" aria-hidden="true"></i>
+                                                            View</a></li>
+                                                    <li><a class="dropdown-item" href="#" onclick="deleteJob({{ $jobApplication->id }})" ><i class="fa fa-trash"
+                                                                aria-hidden="true"></i>
+                                                            Delete</a></li>
                                                 </ul>
                                             </div>
                                         </td>
@@ -63,11 +77,31 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div>
+                            {{ $jobApplications->links() }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+@endsection
+@section('customjs')
+<script type="text/javascript">
+function deleteJob(id){
+    if(confirm('Are you sure you want to delete?')){
+        $.ajax({
+            url: '{{ route('account.job.deleteAppliedJob') }}',
+            type:'post',
+            data: {jobId: jobId},
+            dataType: 'json',
+            success: function(response){
+                window.location.href='{{ route('account.job.myJobApplications') }}'
+            }
+        });
+    }
+}
+</script>
 @endsection
 

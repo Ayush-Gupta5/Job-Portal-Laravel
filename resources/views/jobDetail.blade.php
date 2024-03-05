@@ -60,30 +60,22 @@
 
                             <p>{!! nl2br($jobDetails->description)!!}</p>
                         </div>
-                        @if(!empty($jobDetails->responsibility))
+                        @if(!empty($jobDetails->responsibilites))
                         <div class="single_wrap">
-
-
                                  <h4>Responsibility</h4>
-                                {!! nl2br($jobDetails->responsibility)!!}
-
-
+                                {!! nl2br($jobDetails->responsibilites)!!}
                         </div>
                         @endif
-                        @if(!empty($jobDetails->qualifications))
+                        @if(!empty($jobDetails->qualification))
                         <div class="single_wrap">
-
                                 <h4>Qualifications</h4>
-                                {!! nl2br($jobDetails->qualifications)!!}
-
+                                {!! nl2br($jobDetails->qualification)!!}
                         </div>
                         @endif
                         @if(!empty($jobDetails->benefits))
                         <div class="single_wrap">
-
                                 <h4>Benefits</h4>
                                 {!! nl2br($jobDetails->benefits)!!}
-
                         </div>
                         @endif
                         <div class="border-bottom"></div>
@@ -94,7 +86,6 @@
                             @else
                             <a href="javascript:void(0)" class="btn btn-primary">Login to Apply</a>
                             @endif
-
                         </div>
                     </div>
                 </div>
@@ -110,7 +101,7 @@
                                 <li>Published on: <span>{{ \Carbon\Carbon::parse($jobDetails->created_at)->format('d M, Y') }}</span></li>
                                 <li>Vacancy: <span>{{ $jobDetails->Vacancy }} Position</span></li>
                                 @if (!is_null($jobDetails->salary))
-                                <li>Salary: <span>{{ $jobDetails->Salary }} LPA</span></li>
+                                <li>Salary: <span>{{ $jobDetails->salary }} LPA</span></li>
                                 @else
                                 <li>Salary: <span>Not Disclosed</span></li>
                                 @endif
@@ -128,8 +119,8 @@
                         <div class="job_content pt-3">
                             <ul>
                                 <li>Name: <span>{{ $jobDetails->company_name }}</span></li>
-                                @if(!empty( $jobDetails->comapny_location ))
-                                     <li>Locaion: <span>{{ $jobDetails->comapny_location }}</span></li>
+                                @if(!empty( $jobDetails->company_location ))
+                                     <li>Locaion: <span>{{ $jobDetails->company_location }}</span></li>
                                 @endif
                                 @if(!empty($jobDetails->company_website))
                                 <li>Webite: <span><a href="{{ $jobDetails->company_website }}">{{ $jobDetails->company_website }}</a></span></li>

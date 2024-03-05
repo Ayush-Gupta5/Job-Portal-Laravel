@@ -300,7 +300,7 @@ class AccountController extends Controller
         if($job == null){
             session()->flash('error','Either job deleted or not found.');
             return response()->json([
-                'status'=>true,
+                'status'=>false,
             ]);
         }
 
@@ -317,4 +317,26 @@ class AccountController extends Controller
 
         return view('account.job.my-job-applications',['jobApplications'=>$jobApplications]);
     }
+
+    public function deleteAppliedJob(Request $request){
+
+        $jobApplication=JobApplication::where([
+            'user_id'=>Auth::user()->id,
+            'id'=>$request->id
+        ])->first();
+
+        if($jobApplication == null){
+            session()->flash('error',' Job applicationnot found.');
+            return response()->json([
+                'status'=>false,
+            ]);
+        }
+
+        JobApplication::where('id',$request->id)->delete();
+        session()->flash('success','Job Application deleted Successfully');
+        return response()->json([
+            'status'=>true,
+        ]);
+    }
+
 }

@@ -54,5 +54,6 @@ Route::group(['account'], function () {
         Route::post('/process-EditJob/{jobId}', [AccountController::class, 'processEditJob'])->name('account.processEditJob');
         Route::post('/delete-job', [AccountController::class, 'deleteJob'])->name('account.job.deleteJob');
         Route::get('/my-job-applications',[AccountController::class,'myJobApplications'])->name('account.job.myJobApplications');
+        Route::post('/delete-Applied-job', [AccountController::class, 'deleteAppliedJob'])->name('account.job.deleteAppliedJob');
     });
 });
