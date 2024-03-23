@@ -46,7 +46,7 @@
                                             <div class="info1">{{ $jobApplication->job->jobType->name }} . {{ $jobApplication->job->location }}</div>
                                         </td>
                                         <td>{{ \Carbon\Carbon::parse($jobApplication->appiled_date)->format('d M, Y') }}</td>
-                                        <td>0 Applications</td>
+                                        <td>{{ $jobApplication->job->applications->count() }} Applications</td>
                                         <td>
                                             @if ($jobApplication->job->status==1)
                                             <div class="job-status text-capitalize">Active</div>
@@ -72,6 +72,10 @@
                                         </td>
                                     </tr>
                                     @endforeach
+                                    @else
+                                    <tr>
+                                        <td colspan="5">JobApplication not found</td>
+                                    </tr>
                                     @endif
 
                                 </tbody>
@@ -94,7 +98,7 @@ function deleteJob(id){
         $.ajax({
             url: '{{ route('account.job.deleteAppliedJob') }}',
             type:'post',
-            data: {jobId: jobId},
+            data: {id: id},
             dataType: 'json',
             success: function(response){
                 window.location.href='{{ route('account.job.myJobApplications') }}'

@@ -35,7 +35,7 @@
 
                                 <div class="jobs_conetent">
                                     <a href="#">
-                                        <h4>{{ $jobDetails->title }}r</h4>
+                                        <h4>{{ $jobDetails->title }}</h4>
                                     </a>
                                     <div class="links_locat d-flex align-items-center">
                                         <div class="location">

@@ -219,7 +219,7 @@ class AccountController extends Controller
     public function myjobs()
     {
         $job = Job::where('user_id', Auth::user()->id)
-    ->with('jobType')
+    ->with('jobType','applications')
     ->orderBy('id', 'desc')
     ->paginate(10);
 
@@ -313,7 +313,9 @@ class AccountController extends Controller
 
     public function myJobApplications(){
 
-        $jobApplications=JobApplication::where('user_id',Auth::user()->id)->with('job','job.jobType')->orderBy('appiled_date','desc')->paginate(10);
+        $jobApplications=JobApplication::where('user_id',Auth::user()->id)
+                         ->with('job','job.jobType','job.applications')->orderBy('appiled_date','desc')
+                         ->paginate(10);
 
         return view('account.job.my-job-applications',['jobApplications'=>$jobApplications]);
     }
@@ -321,18 +323,18 @@ class AccountController extends Controller
     public function deleteAppliedJob(Request $request){
 
         $jobApplication=JobApplication::where([
-            'user_id'=>Auth::user()->id,
-            'id'=>$request->id
+            'id'=>$request->id,
+            'user_id'=>Auth::user()->id
         ])->first();
 
         if($jobApplication == null){
-            session()->flash('error',' Job applicationnot found.');
+            session()->flash('error','Job application not found.');
             return response()->json([
                 'status'=>false,
             ]);
         }
 
-        JobApplication::where('id',$request->id)->delete();
+        JobApplication::find($request->id)->delete();
         session()->flash('success','Job Application deleted Successfully');
         return response()->json([
             'status'=>true,
