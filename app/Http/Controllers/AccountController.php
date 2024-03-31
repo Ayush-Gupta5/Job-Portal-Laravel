@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\job;
 use App\Models\JobType;
 use App\Models\Category;
+use App\Models\SavedJob;
 use Illuminate\Http\Request;
 use App\Models\JobApplication;
 use Illuminate\Foundation\Auth\User;
@@ -336,6 +337,41 @@ class AccountController extends Controller
 
         JobApplication::find($request->id)->delete();
         session()->flash('success','Job Application deleted Successfully');
+        return response()->json([
+            'status'=>true,
+        ]);
+    }
+
+    public function savedJob(){
+
+        // $savedjob=SavedJob::where('user_id',Auth::user()->id)
+        //                  ->with('job','job.jobType','job.applications')->orderBy('appiled_date','desc')
+        //
+
+        $savedjob=SavedJob::where([
+            'user_id'=> Auth::user()->id
+        ])->with('job','job.jobType','job.applications')->orderBy('created_at','desc')->paginate(10);
+
+
+        return view('account.job.saved-job',['savedjob'=>$savedjob]);
+    }
+
+    public function deleteSavedJob(Request $request){
+
+        $savejob=SavedJob::where([
+            'id'=>$request->id,
+            'user_id'=>Auth::user()->id
+        ])->first();
+
+        if($savejob == null){
+            session()->flash('error','Saved job not found.');
+            return response()->json([
+                'status'=>false,
+            ]);
+        }
+
+        SavedJob::find($request->id)->delete();
+        session()->flash('success','Saved job remove Successfully');
         return response()->json([
             'status'=>true,
         ]);
