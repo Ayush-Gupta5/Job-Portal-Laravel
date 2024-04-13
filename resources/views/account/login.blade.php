@@ -5,16 +5,16 @@
     <div class="container my-5">
         <div class="py-lg-2">&nbsp;</div>
         @if (Session::has('success'))
-        <div class="alert alert-success mb-0 pb-0">
-            <p>{{ Session::get('success') }}</p>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ Session::get('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-
         @endif
         @if (Session::has('error'))
-        <div class="alert alert-danger mb-0 pb-0">
-            <p>{{ Session::get('error') }}</p>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ Session::get('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-
         @endif
         <div class="row d-flex justify-content-center">
             <div class="col-md-5">

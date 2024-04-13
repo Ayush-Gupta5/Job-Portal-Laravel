@@ -58,5 +58,6 @@ Route::group(['account'], function () {
         Route::post('/delete-Applied-job', [AccountController::class, 'deleteAppliedJob'])->name('account.job.deleteAppliedJob');
         Route::get('/saved-job', [AccountController::class, 'savedJob'])->name('account.job.savedJob');
         Route::post('/delete-Saved-job', [AccountController::class, 'deleteSavedJob'])->name('account.job.deleteSavedJob');
+        Route::post('/update-password', [AccountController::class, 'updatePassword'])->name('account.updatePassword');
     });
 });

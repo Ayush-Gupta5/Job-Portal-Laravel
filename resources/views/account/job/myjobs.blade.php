@@ -83,6 +83,10 @@
                                         </td>
                                     </tr>
                                     @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="5">Job not found</td>
+                                        </tr>
                                     @endif
 
 

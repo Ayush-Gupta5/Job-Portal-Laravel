@@ -19,9 +19,16 @@
                 </div>
                 <div class="col-lg-9">
                     @if (Session::has('success'))
-                        <div class="alert alert-success mb-2 pb-0">
-                            <p>{{ Session::get('success') }}</p>
-                        </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ Session::get('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    @endif
+                    @if (Session::has('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ Session::get('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     @endif
                     <div class="card border-0 shadow mb-4">
 
@@ -61,25 +68,31 @@
                     </div>
 
                     <div class="card border-0 shadow mb-4">
+                        <form action="" method="POST" id="ChangePasswordForm" name="ChangePasswordForm">
                         <div class="card-body p-4">
                             <h3 class="fs-4 mb-1">Change Password</h3>
                             <div class="mb-4">
                                 <label for="" class="mb-2">Old Password*</label>
-                                <input type="password" placeholder="Old Password" class="form-control">
+                                <input type="password" name="old_password" id="old_password" placeholder="Old Password" class="form-control">
+                                <p></p>
                             </div>
                             <div class="mb-4">
                                 <label for="" class="mb-2">New Password*</label>
-                                <input type="password" placeholder="New Password" class="form-control">
+                                <input type="password" name="new_password" id="new_password" placeholder="New Password" class="form-control">
+                                <p></p>
                             </div>
                             <div class="mb-4">
                                 <label for="" class="mb-2">Confirm Password*</label>
-                                <input type="password" placeholder="Confirm Password" class="form-control">
+                                <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" class="form-control">
+                                <p></p>
                             </div>
                         </div>
                         <div class="card-footer  p-4">
-                            <button type="button" class="btn btn-primary">Update</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
                         </div>
+                    </form>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -130,5 +143,61 @@
                 }
             });
         });
+
+        $("#ChangePasswordForm").submit(function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: '{{ route('account.updatePassword') }}',
+                type: 'post',
+                data: $("#ChangePasswordForm").serializeArray(),
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status == false) {
+                        var errors = response.errors;
+
+                        // Corrected field names in the following conditions
+                        if (errors.old_password) {
+                            $("#old_password").addClass('is-invalid').siblings('p').addClass('invalid-feedback')
+                                .html(errors.old_password);
+                        } else {
+                            $("#old_password").removeClass('is-invalid').siblings('p').removeClass(
+                                    'invalid-feedback')
+                                .html('');
+                        }
+                        if (errors.new_password) {
+                            $("#new_password").addClass('is-invalid').siblings('p').addClass(
+                                    'invalid-feedback')
+                                .html(errors.new_password);
+                        } else {
+                            $("#new_password").removeClass('is-invalid').siblings('p').removeClass(
+                                    'invalid-feedback')
+                                .html('');
+                        }
+                        if (errors.confirm_password) {
+                            $("#confirm_password").addClass('is-invalid').siblings('p').addClass(
+                                    'invalid-feedback')
+                                .html(errors.confirm_password);
+                        } else {
+                            $("#confirm_password").removeClass('is-invalid').siblings('p').removeClass(
+                                    'invalid-feedback')
+                                .html('');
+                        }
+                    } else {
+                        $("#old_password").removeClass('is-invalid').siblings('p').removeClass(
+                                'invalid-feedback')
+                            .html('');
+                        $("#new_password").removeClass('is-invalid').siblings('p').removeClass(
+                            'invalid-feedback')
+                        .html('');
+                        $("#confirm_password").removeClass('is-invalid').siblings('p').removeClass(
+                                'invalid-feedback')
+                            .html('');
+                        window.location.href = '{{ route('account.profile') }}';
+                    }
+                }
+            });
+        });
+
     </script>
 @endsection
