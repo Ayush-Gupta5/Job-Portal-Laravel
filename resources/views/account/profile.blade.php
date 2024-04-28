@@ -32,36 +32,47 @@
                     @endif
                     <div class="card border-0 shadow mb-4">
 
-                        <form action="" method="post" id="userForm" name="userForm">
+                        <form action="" method="post" id="userForm" name="userForm" enctype="multipart/form-data">
                             @csrf
-                            <div class="card-body  p-4">
+                            @method('PUT')
+                            <div class="card-body p-4">
                                 <h3 class="fs-4 mb-1">My Profile</h3>
                                 <div class="mb-4">
-                                    <label for="" class="mb-2">Name*</label>
-                                    <input type="text" placeholder="Enter Name" name="name" id="name"
-                                        class="form-control" value="{{ $user->name }}">
+                                    <label for="name" class="mb-2">Name*</label>
+                                    <input type="text" placeholder="Enter Name" name="name" id="name" class="form-control"
+                                        value="{{ $user->name }}">
                                     <p></p>
                                 </div>
                                 <div class="mb-4">
-                                    <label for="" class="mb-2">Email*</label>
-                                    <input type="text" placeholder="Enter Email" name="email" id="email"
-                                        class="form-control" value="{{ $user->email }}">
+                                    <label for="email" class="mb-2">Email*</label>
+                                    <input type="text" placeholder="Enter Email" name="email" id="email" class="form-control"
+                                        value="{{ $user->email }}">
                                     <p></p>
                                 </div>
                                 <div class="mb-4">
-                                    <label for="" class="mb-2">Designation</label>
+                                    <label for="designation" class="mb-2">Designation</label>
                                     <input type="text" placeholder="Designation" name="designation" id="designation"
                                         class="form-control" value="{{ $user->designation }}">
-
                                 </div>
                                 <div class="mb-4">
-                                    <label for="" class="mb-2">Mobile</label>
-                                    <input type="text" placeholder="Mobile" name="mobile" id="mobile"
-                                        class="form-control" value="{{ $user->mobile }}">
-
+                                    <label for="mobile" class="mb-2">Mobile</label>
+                                    <input type="text" placeholder="Mobile" name="mobile" id="mobile" class="form-control"
+                                        value="{{ $user->mobile }}">
                                 </div>
+                                <div class="mb-4">
+                                    <label for="resume" class="mb-2">Upload Resume (PDF only)</label>
+                                    <input type="file" id="resume" name="resume" accept="application/pdf" class="form-control">
+                                    <small class="text-muted">Only PDF files are accepted. (PDF file, max 2MB)</small>
+                                </div>
+                                @if ($user->resume)
+                                    <div class="mb-4">
+                                        <p>Download Resume:</p>
+                                        <a href="{{ url('/Resumes/' . $user->resume) }}" download="{{ $user->name }}_resume.pdf">Download Resume</a>
+                                    </div>
+                                @endif
+
                             </div>
-                            <div class="card-footer  p-4">
+                            <div class="card-footer p-4">
                                 <button type="submit" class="btn btn-primary">Update</button>
                             </div>
                         </form>
@@ -102,47 +113,52 @@
 @section('customjs')
     <script type="text/javascript">
         $("#userForm").submit(function(e) {
-            e.preventDefault();
+    e.preventDefault();
 
-            $.ajax({
-                url: '{{ route('account.updateProfile') }}',
-                type: 'put',
-                data: $("#userForm").serializeArray(),
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status == false) {
-                        var errors = response.errors;
+    var formData = new FormData(this); // Construct FormData object from the form
 
-                        // Corrected field names in the following conditions
-                        if (errors.name) {
-                            $("#name").addClass('is-invalid').siblings('p').addClass('invalid-feedback')
-                                .html(errors.name);
-                        } else {
-                            $("#name").removeClass('is-invalid').siblings('p').removeClass(
-                                    'invalid-feedback')
-                                .html('');
-                        }
-                        if (errors.email) {
-                            $("#email").addClass('is-invalid').siblings('p').addClass(
-                                    'invalid-feedback')
-                                .html(errors.email);
-                        } else {
-                            $("#email").removeClass('is-invalid').siblings('p').removeClass(
-                                    'invalid-feedback')
-                                .html('');
-                        }
-                    } else {
-                        $("#name").removeClass('is-invalid').siblings('p').removeClass(
-                                'invalid-feedback')
-                            .html('');
-                        $("#email").removeClass('is-invalid').siblings('p').removeClass(
-                                'invalid-feedback')
-                            .html('');
-                        window.location.href = '{{ route('account.profile') }}';
-                    }
+    $.ajax({
+        url: '{{ route('account.updateProfile') }}',
+        type: 'POST', // Changed to POST since file uploads are not supported in PUT requests
+        data: formData, // Use FormData object for the data
+        dataType: 'json',
+        processData: false, // Prevent jQuery from processing the data
+        contentType: false, // Prevent jQuery from setting contentType
+        success: function(response) {
+            if (response.status == false) {
+                var errors = response.errors;
+
+                // Corrected field names in the following conditions
+                if (errors.name) {
+                    $("#name").addClass('is-invalid').siblings('p').addClass('invalid-feedback')
+                        .html(errors.name);
+                } else {
+                    $("#name").removeClass('is-invalid').siblings('p').removeClass(
+                            'invalid-feedback')
+                        .html('');
                 }
-            });
-        });
+                if (errors.email) {
+                    $("#email").addClass('is-invalid').siblings('p').addClass(
+                            'invalid-feedback')
+                        .html(errors.email);
+                } else {
+                    $("#email").removeClass('is-invalid').siblings('p').removeClass(
+                            'invalid-feedback')
+                        .html('');
+                }
+            } else {
+                $("#name").removeClass('is-invalid').siblings('p').removeClass(
+                        'invalid-feedback')
+                    .html('');
+                $("#email").removeClass('is-invalid').siblings('p').removeClass(
+                        'invalid-feedback')
+                    .html('');
+                window.location.href = '{{ route('account.profile') }}';
+            }
+        }
+    });
+});
+
 
         $("#ChangePasswordForm").submit(function(e) {
             e.preventDefault();

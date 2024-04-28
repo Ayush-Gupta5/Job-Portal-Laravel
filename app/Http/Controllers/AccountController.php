@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -93,17 +94,33 @@ class AccountController extends Controller
     public function updateProfile(Request $request)
     {
         $id = Auth::user()->id;
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:5|max:20',
             'email' => 'required|email|unique:users,email,' . $id . ',id',
+            'resume' => 'nullable|mimes:pdf|max:2048', // PDF file, max 2MB
         ]);
 
         if ($validator->passes()) {
-            $user = user::find($id);
+            $user = User::find($id);
             $user->name = $request->name;
             $user->email = $request->email;
             $user->designation = $request->designation;
             $user->mobile = $request->mobile;
+
+            if ($request->hasFile('resume')) {
+                // Delete old Resume file if it exists
+                if ($user->resume) {
+                    File::delete(public_path('Resumes/' . $user->resume));
+                }
+
+                $resumeFile = $request->file('resume');
+                $ext = $resumeFile->getClientOriginalExtension();
+                $resumeName = time() . '-' . $resumeFile->getClientOriginalName(); // Use timestamp + original file name
+                $resumeFile->move(public_path('Resumes'), $resumeName);
+                $user->resume = $resumeName;
+            }
+
             $user->save();
 
             session()->flash('success', 'Profile updated successfully');
@@ -119,7 +136,6 @@ class AccountController extends Controller
             ]);
         }
     }
-
 
 
     public function updateProfilePic(Request $request)

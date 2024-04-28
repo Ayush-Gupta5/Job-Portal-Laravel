@@ -117,6 +117,7 @@
                                     <th>Email</th>
                                     <th>Mobile No.</th>
                                     <th>Applied Date</th>
+                                    <th>Download Resume</th>
                                 </tr>
                                 @if($applications->isNotEmpty())
                                 @foreach ($applications as $application )
@@ -125,6 +126,17 @@
                                     <td>{{$application->user->email  }}</td>
                                     <td>{{$application->user->mobile  }}</td>
                                     <td>{{ \Carbon\Carbon::parse($application->appiled_date)->format('d M, Y') }}</td>
+                                    <td>
+                                        @if ($application->user->resume)
+                                            <div class="mb-4">
+                                                <a href="{{ url('/Resumes/' . $application->user->resume) }}" download="{{ $application->user->name }}_resume.pdf">Download Resume</a>
+                                            </div>
+                                        @else
+                                            <div class="mb-4">
+                                                <p>Resume not available</p>
+                                            </div>
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                                 @else

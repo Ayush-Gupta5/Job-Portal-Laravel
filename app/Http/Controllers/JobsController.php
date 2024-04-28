@@ -12,6 +12,7 @@ use App\Models\JobApplication;
 use App\Mail\JobNotificationEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\EmployeeJobAppliedEmail;
 
 class JobsController extends Controller
 {
@@ -90,10 +91,10 @@ class JobsController extends Controller
     {
         $id = $request->id;
 
-        $job = job::where('id', $id)->first();
+        $job = Job::find($id);
 
-        //job not found in db
-        if ($job == null) {
+        // Job not found in db
+        if (!$job) {
             session()->flash('error', 'Job does not exist');
             return response()->json([
                 'status' => false,
@@ -101,30 +102,31 @@ class JobsController extends Controller
             ]);
         }
 
-        //you can not apply on your own job
+        // User can not apply to their own job
         $employer_id = $job->user_id;
-
         if ($employer_id == Auth::user()->id) {
-            session()->flash('error', 'You can not apply on your own job');
+            session()->flash('error', 'You cannot apply to your own job');
             return response()->json([
                 'status' => false,
-                'message' => 'You can not apply on your own job'
+                'message' => 'You cannot apply to your own job'
             ]);
         }
 
-        //you can not apply on a job twice
+        // User cannot apply to a job twice
         $jobApplicationCount = JobApplication::where([
             'user_id' => Auth::user()->id,
             'job_id' => $id
         ])->count();
 
         if ($jobApplicationCount > 0) {
-            session()->flash('error', 'You already applied on this job');
+            session()->flash('error', 'You have already applied to this job');
             return response()->json([
                 'status' => false,
-                'message' => 'You already applied on this job'
+                'message' => 'You have already applied to this job'
             ]);
         }
+
+        // Save job application
         $application = new JobApplication();
         $application->job_id = $id;
         $application->user_id = Auth::user()->id;
@@ -132,14 +134,26 @@ class JobsController extends Controller
         $application->appiled_date = now();
         $application->save();
 
-        //Send Notificatiom Email to employer
-        $employer = User::where('id', $employer_id)->first();
+        $employee = Auth::user();
+        // Send Notification Email to employer
+        $employer = User::find($employer_id);
+        $resumePath = public_path('Resumes/' . $employee->resume);
         $mailData = [
             'employer' => $employer,
             'user' => Auth::user(),
             'job' => $job
         ];
-        Mail::to($employer->email)->send(new JobNotificationEmail($mailData));
+        Mail::to($employer->email)->send(new JobNotificationEmail($mailData,$resumePath));
+
+        // Send Notification Email to employee
+
+        $EmployeeMailData = [
+            'employer' => $employer,
+            'user' => $employee,
+            'job' => $job
+        ];
+
+        Mail::to($employee->email)->send(new EmployeeJobAppliedEmail($EmployeeMailData));
 
         $message = "You have successfully applied";
         session()->flash('success', $message);
@@ -148,6 +162,7 @@ class JobsController extends Controller
             'message' => $message
         ]);
     }
+
 
     public function saveJob(Request $request)
     {
