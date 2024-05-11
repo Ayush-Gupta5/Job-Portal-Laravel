@@ -8,7 +8,7 @@
                 <div class="col-12 col-xl-8">
                     <h1>Find your dream job</h1>
                     <p>Thounsands of jobs available.</p>
-                    <div class="banner-btn mt-5"><a href="#" class="btn btn-primary mb-4 mb-sm-0">Explore Now</a></div>
+                    <div class="banner-btn mt-5"><a href="{{ route('jobs') }}" class="btn btn-primary mb-4 mb-sm-0">Explore Now</a></div>
                 </div>
             </div>
         </div>
@@ -96,7 +96,7 @@
                                                     </p>
                                                     @if (!is_null($fjob->salary))
                                                         <p class="mb-0">
-                                                            <span class="fw-bolder"><i class="fa fa-usd"></i></span>
+                                                            <span class="fw-bolder"><i class="fa fa-inr"></i></span>
                                                             <span class="ps-1">{{ $fjob->salary }} Lacs PA</span>
                                                         </p>
                                                     @else
@@ -150,12 +150,12 @@
                                                     </p>
                                                     @if (!is_null($ljob->salary))
                                                         <p class="mb-0">
-                                                            <span class="fw-bolder"><i class="fa fa-usd"></i></span>
+                                                            <span class="fw-bolder"><i class="fa fa-inr"></i></span>
                                                             <span class="ps-1">{{ $ljob->salary }} Lacs PA</span>
                                                         </p>
                                                     @else
                                                         <p class="mb-0">
-                                                            <span class="fw-bolder"><i class="fa fa-usd"></i></span>
+                                                            <span class="fw-bolder"><i class="fa fa-inr"></i></span>
                                                             <span class="ps-1">Not Disclosed</span>
                                                         </p>
                                                     @endif

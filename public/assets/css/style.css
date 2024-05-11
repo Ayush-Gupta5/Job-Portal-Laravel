@@ -9256,12 +9256,12 @@ button.btn-primary:hover, button.btn-primary:focus, .btn.btn-primary:hover, .btn
   color: #ffffff;
 }
 button.btn-secondary, .btn.btn-secondary {
-  background: #242021;
-  border: 2px solid #242021;
+  background: #A8DF8E;
+  border: 2px solid #A8DF8E;
 }
 button.btn-secondary:hover, button.btn-secondary:focus, .btn.btn-secondary:hover, .btn.btn-secondary:focus {
-  border: 2px solid #A8DF8E;
-  background: #A8DF8E;
+  border: 2px solid #242021;
+  background: #242021;
   color: #ffffff;
 }
 button.btn-outline-primary, .btn.btn-outline-primary {
@@ -9465,7 +9465,7 @@ header .navbar-brand {
   padding: 40px;
 }
 .section-4 .job_details_area .descript_wrap p {
-  color: #7A838B;
+  color: black;
   font-size: 16px;
   line-height: 28px;
   font-weight: 400;
@@ -9484,7 +9484,7 @@ header .navbar-brand {
 .section-4 .job_details_area .descript_wrap .single_wrap ul li {
   font-size: 16px;
   line-height: 32px;
-  color: #7A838B;
+  color: black;
   font-weight: 400;
   position: relative;
   padding-left: 25px;

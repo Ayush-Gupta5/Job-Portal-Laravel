@@ -7,7 +7,7 @@
             <div class="col">
                 <nav aria-label="breadcrumb" class=" rounded-3 p-3 mb-4">
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="{{ route('/') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item active">Users</li>
                     </ol>
                 </nav>
@@ -36,10 +36,6 @@
                             <div>
                                 <h3 class="fs-4 mb-1">Users</h3>
                             </div>
-                            {{-- <div style="margin-top: -10px;">
-                                <a href="{{ route('account.job.postJob') }}" class="btn btn-primary">Post a Job</a>
-                            </div> --}}
-
                         </div>
                         <div class="table-responsive">
                             <table class="table ">
@@ -119,7 +115,7 @@
         if(confirm('Are you sure you want to delete?')){
             $.ajax({
                 url: '{{ route('admin.users.destroy') }}',
-                type: 'DELETE', // Use uppercase DELETE method
+                type: 'post', // Use uppercase DELETE method
                 data: {id: id},
                 dataType: 'json',
                 success: function(response){

@@ -22,23 +22,21 @@
                         <div class="card border-0 shadow p-4">
                             <div class="mb-4">
                                 <h2>Keywords</h2>
-                                <input value="{{ Request::get('keyword') }}" type="text" placeholder="Keywords" name="keyword"
-                                id="keyword" class="form-control">
+                                <input value="{{ Request::get('keyword') }}" type="text" placeholder="Keywords" name="keyword" id="keyword" class="form-control">
                             </div>
 
                             <div class="mb-4">
                                 <h2>Location</h2>
-                                <input value="{{ Request::get('location') }}" type="text" placeholder="Location" name="location"
-                                id="location" class="form-control">
+                                <input value="{{ Request::get('location') }}" type="text" placeholder="Location" name="location" id="location" class="form-control">
                             </div>
 
                             <div class="mb-4">
                                 <h2>Category</h2>
-                                <select name="category"  id="category" class="form-control">
+                                <select name="category" id="category" class="form-control">
                                     <option value="">Select a Category</option>
                                     @if ($categories)
                                         @foreach ($categories as $category)
-                                            <option  {{ (Request::get('category_id')) ==$category->id?'selected':'' }}  value="{{ $category->id }}">{{ $category->name }}</option>
+                                            <option {{ (Request::get('category_id')) ==$category->id?'selected':'' }} value="{{ $category->id }}">{{ $category->name }}</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -49,10 +47,8 @@
                                 @if ($jobTypes->isNotEmpty())
                                     @foreach ($jobTypes as $jobType)
                                         <div class="form-check mb-2">
-                                            <input {{ (in_array($jobType->id, $jobTypeArray)) ? 'checked':'' }} class="form-check-input " name="job_type" type="checkbox"
-                                                value="{{ $jobType->id }}" id="job-type-{{ $jobType->id }}">
-                                            <label class="form-check-label "
-                                                for="job-type-{{ $jobType->id }}">{{ $jobType->name }}</label>
+                                            <input {{ (in_array($jobType->id, $jobTypeArray)) ? 'checked':'' }} class="form-check-input " name="job_type" type="checkbox" value="{{ $jobType->id }}" id="job-type-{{ $jobType->id }}">
+                                            <label class="form-check-label " for="job-type-{{ $jobType->id }}">{{ $jobType->name }}</label>
                                         </div>
                                     @endforeach
                                 @endif
@@ -60,12 +56,12 @@
 
                             <div class="mb-4">
                                 <h2>Experience</h2>
-                                <select name="experience" id="experience"  class="form-control">
-                                    <option value="" >Select Experience</option>
-                                    <option value="F" {{ (Request::get('experience')=="F") ?'selected':'' }} >Fresher</option>
+                                <select name="experience" id="experience" class="form-control">
+                                    <option value="">Select Experience</option>
+                                    <option value="F" {{ (Request::get('experience')=="F") ?'selected':'' }}>Fresher</option>
                                     <option {{ (Request::get('experience')==1) ?'selected':'' }} value="1">1 Years</option>
                                     <option {{ (Request::get('experience')==2) ?'selected':'' }} value="2">2 Years</option>
-                                    <option {{ (Request::get('experience')==3) ?'selected':'' }} value="3">3 Years</option>experience
+                                    <option {{ (Request::get('experience')==3) ?'selected':'' }} value="3">3 Years</option>
                                     <option {{ (Request::get('experience')==4) ?'selected':'' }} value="4">4 Years</option>
                                     <option {{ (Request::get('experience')==5) ?'selected':'' }} value="5">5 Years</option>
                                     <option {{ (Request::get('experience')==6) ?'selected':'' }} value="6">6 Years</option>
@@ -73,12 +69,14 @@
                                     <option {{ (Request::get('experience')==8) ?'selected':'' }} value="8">8 Years</option>
                                     <option {{ (Request::get('experience')==9) ?'selected':'' }} value="9">9 Years</option>
                                     <option {{ (Request::get('experience')==10) ?'selected':'' }} value="10">10+ Years</option>
-
                                 </select>
                             </div>
-                            <button class="btn btn-primary" type="submit">Search</button>
+
+                            <button class="btn btn-primary" type="submit">Search</button><br>
+                            <button class="btn btn-secondary" type="button" id="resetBtn">Reset</button>
                         </div>
                     </form>
+
                 </div>
                 <div class="col-md-8 col-lg-9 ">
                     <div class="job_listing_area">
@@ -104,12 +102,12 @@
 
                                                         @if (!is_null($job->salary))
                                                             <p class="mb-0">
-                                                                <span class="fw-bolder"><i class="fa fa-usd"></i></span>
+                                                                <span class="fw-bolder"><i class="fa fa-inr"></i></span>
                                                                 <span class="ps-1">{{ $job->salary }} Lacs PA</span>
                                                             </p>
                                                         @else
                                                             <p class="mb-0">
-                                                                <span class="fw-bolder"><i class="fa fa-usd"></i></span>
+                                                                <span class="fw-bolder"><i class="fa fa-inr"></i></span>
                                                                 <span class="ps-1">Not Disclosed</span>
                                                             </p>
                                                         @endif
@@ -128,7 +126,7 @@
 
                             </div>
                         </div>
-
+                        {{ $jobs->withQueryString()->links() }}
                     </div>
                 </div>
 
@@ -140,6 +138,21 @@
 @section('customjs')
 
 <script type="text/javascript">
+
+$(document).ready(function() {
+        $("#resetBtn").click(function() {
+            // Clear input fields
+            $("#keyword").val('');
+            $("#location").val('');
+            $("#category").val('');
+            $("#experience").val('');
+            $("input:checkbox[name='job_type']").prop('checked', false);
+
+            // Submit the form after clearing
+            $("#searchForm").submit();
+        });
+    });
+
 $("#searchForm").submit(function(e){
     e.preventDefault();
     var url='{{ route("jobs") }}?';

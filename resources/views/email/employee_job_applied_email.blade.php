@@ -6,7 +6,7 @@
 <title>Job Application Received</title>
 </head>
 <body style="font-family: Arial, sans-serif; margin: 0; padding: 0;">
-  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+  <table role="presentation" width="100%" border="0" cellspacing="10" cellpadding="0">
     <tr>
       <td align="center" style="padding: 20px 0;">
         <h1 style="margin: 0;">Job Application Received</h1>
