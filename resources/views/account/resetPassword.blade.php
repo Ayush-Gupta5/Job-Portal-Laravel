@@ -19,31 +19,28 @@
         <div class="row d-flex justify-content-center">
             <div class="col-md-5">
                 <div class="card shadow border-0 p-5">
-                    <h1 class="h3">Login</h1>
-                    <form action="{{ route('account.authenticate') }}" method="post">
+                    <h1 class="h3">Reset Password</h1>
+                    <form action="{{ route('account.processResetPassword') }}" id="ResetPasswordForm" method="post">
                         @csrf
+                        <input type="hidden" name="token" value="{{ $tokenstring }}">
                         <div class="mb-3">
-                            <label for="" class="mb-2">Email*</label>
-                            <input type="text" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="example@example.com" value="{{ old('email') }}">
-                            @error('email')
+                            <label for="" class="mb-2">New Password*</label>
+                            <input type="password" name="NewPassword" id="NewPassword" class="form-control @error('NewPassword') is-invalid @enderror" placeholder="Enter New Password" value="">
+                            @error('NewPassword')
                             <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="" class="mb-2">Password*</label>
-                            <input type="password" name="password" id="password" class="form-control  @error('password') is-invalid @enderror" placeholder="Enter Password">
-                            @error('password')
+                            <label for="" class="mb-2">Confirm Password*</label>
+                            <input type="password" name="ConfirmPassword" id="ConfirmPassword" class="form-control  @error('ConfirmPassword') is-invalid @enderror" placeholder="Enter Confirm Password">
+                            @error('ConfirmPassword')
                             <p class="invalid-feedback">{{ $message }}</p>
                             @enderror
                         </div>
                         <div class="justify-content-between d-flex">
-                        <button class="btn btn-primary mt-2">Login</button>
-                            <a href="{{ route('account.forgotPassword') }}" class="mt-3">Forgot Password?</a>
+                        <button class="btn btn-primary mt-2">Submit</button>
                         </div>
                     </form>
-                </div>
-                <div class="mt-4 text-center">
-                    <p>Do not have an account? <a  href="{{ route('account.register') }}">Register</a></p>
                 </div>
             </div>
         </div>

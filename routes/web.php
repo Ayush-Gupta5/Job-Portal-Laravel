@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\admin\JobApplicationController;
 use App\Http\Controllers\admin\JobController;
 use App\Http\Controllers\admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,8 @@ Route::group(['prefix' => 'admin','middleware'=>'checkRole'], function () {
     Route::get('/jobs/{id}', [JobController::class, 'edit'])->name('admin.jobs.edit');
     Route::put('/jobs/{id}', [JobController::class, 'update'])->name('admin.jobs.update');
     Route::post('/jobs', [JobController::class, 'destroy'])->name('admin.jobs.destroy');
+    Route::get('/job-applications', [JobApplicationController::class, 'index'])->name('admin.jobApplications');
+    Route::post('/job-applications', [JobApplicationController::class, 'destroy'])->name('admin.jobApplications.destroy');
 });
 
 
@@ -50,10 +53,14 @@ Route::group(['account'], function () {
 
     //Guest Route
     Route::group(['middleware' => 'guest'], function () {
-        Route::get('/account/register', [AccountController::class, 'register'])->name('account.register');
-        Route::post('/account/process-register', [AccountController::class, 'processRegistration'])->name('account.processRegistration');
-        Route::post('/account/authenticate', [AccountController::class, 'authenticate'])->name('account.authenticate');
-        Route::get('/account/login', [AccountController::class, 'login'])->name('account.login');
+        Route::get('/register', [AccountController::class, 'register'])->name('account.register');
+        Route::post('/process-register', [AccountController::class, 'processRegistration'])->name('account.processRegistration');
+        Route::post('/authenticate', [AccountController::class, 'authenticate'])->name('account.authenticate');
+        Route::get('/login', [AccountController::class, 'login'])->name('account.login');
+        Route::get('/forgot-password', [AccountController::class, 'forgotPassword'])->name('account.forgotPassword');
+        Route::post('/process-forgotPassword', [AccountController::class, 'processForgotPassword'])->name('account.processForgotPassword');
+        Route::get('/reset-password/{token}', [AccountController::class, 'resetPassword'])->name('account.resetPassword');
+        Route::post('/process-resetPassword', [AccountController::class, 'processResetPassword'])->name('account.processResetPassword');
 
 
     });
