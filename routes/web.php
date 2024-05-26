@@ -61,8 +61,7 @@ Route::group(['account'], function () {
         Route::post('/process-forgotPassword', [AccountController::class, 'processForgotPassword'])->name('account.processForgotPassword');
         Route::get('/reset-password/{token}', [AccountController::class, 'resetPassword'])->name('account.resetPassword');
         Route::post('/process-resetPassword', [AccountController::class, 'processResetPassword'])->name('account.processResetPassword');
-
-
+        Route::get('/email-verify/{token}', [AccountController::class, 'emailVerify'])->name('account.emailVerify');
     });
 
     //Authentocate Route

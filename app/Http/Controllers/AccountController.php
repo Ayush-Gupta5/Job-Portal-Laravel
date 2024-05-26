@@ -8,8 +8,10 @@ use App\Models\Category;
 use App\Models\SavedJob;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Mail\EmailVerifyMail;
 use App\Models\JobApplication;
 use App\Mail\ResetPasswordEmail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -17,7 +19,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 
 
 class AccountController extends Controller
@@ -43,16 +44,14 @@ class AccountController extends Controller
             ],
             'confirm_password' => 'required|same:password'
         ], [
-            'name.required' => 'The old password field is required.',
-            'new_password.required' => 'The new password field is required.',
+            'name.required' => 'The name field is required.',
             'email.required' => 'The email field is required.',
-            'email.unique' => 'This email is already exist.',
-            'password.min' => 'The new password must be at least 8 characters long.',
-            'password.regex' => 'The new password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
-            'password.same' => 'The new password and confirmation password must match.',
+            'email.unique' => 'This email is already taken.',
+            'password.required' => 'The password field is required.',
+            'password.min' => 'The password must be at least 8 characters long.',
+            'password.regex' => 'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
             'confirm_password.required' => 'The confirm password field is required.',
-            'confirm_password.same' => 'The confirm password must match the new password.',
-
+            'confirm_password.same' => 'The confirm password must match the password.',
         ]);
 
         if ($validator->passes()) {
@@ -62,7 +61,22 @@ class AccountController extends Controller
             $user->password = Hash::make($request->password);
             $user->save();
 
-            Session()->flash('success', 'You have registerd successfully');
+            $token = Str::random(60);
+
+            DB::table('email_verify_tokens')->insert([
+                'email' => $request->email,
+                'token' => $token,
+                'created_at' => now()
+            ]);
+
+            $EmailData = [
+                'token' => $token,
+                'user' => $user,
+            ];
+
+            Mail::to($request->email)->send(new EmailVerifyMail($EmailData));
+
+            session()->flash('success', 'You have registered successfully. Please verify your email to complete the registration process.');
 
             return response()->json([
                 'status' => true,
@@ -76,6 +90,22 @@ class AccountController extends Controller
         }
     }
 
+    public function emailVerify(Request $request)
+    {
+
+        $token = DB::table('email_verify_tokens')->where('token', $request->token)->first();
+
+        if ($token == null) {
+            return redirect()->route('account.forgotPassword')->with('error', 'Invalid token');
+        }
+
+        User::where('email', $token->email)->update([
+            'email_verified' => '1'
+        ]);
+
+        return redirect()->route('account.login')->with('success', 'Your Have successfully verify your email');
+    }
+
 
     public function login()
     {
@@ -84,22 +114,26 @@ class AccountController extends Controller
 
     public function authenticate(Request $request)
     {
-        $validator = validator::make($request->all(), [
-            'email' => 'required',
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',  // Added email validation
             'password' => 'required'
         ]);
 
         if ($validator->passes()) {
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                $user = Auth::user();
+                if (!$user->email_verified) {  // Assuming 'email_verified' is a boolean field on the user model
+                    Auth::logout();
+                    return redirect()->route('account.login')->with('error', 'Your email is not verified yet.');
+                }
                 return redirect()->route('account.profile');
             } else {
-                return redirect()->route('account.login')->with('error', 'Either Email/Password is incorrect');
+                return redirect()->route('account.login')->with('error', 'Either Email/Password is incorrect.');
             }
         } else {
             return redirect()->route('account.login')->withErrors($validator)->withInput($request->only('email'));
         }
     }
-
     public function profile()
     {
         $id = Auth::user()->id;
@@ -562,8 +596,8 @@ class AccountController extends Controller
             return redirect()->route('account.resetPassword', $request->token)->withErrors($validator);
         }
 
-        User::where('email',$token->email)->update([
-            'password'=>Hash::make($request->NewPassword)
+        User::where('email', $token->email)->update([
+            'password' => Hash::make($request->NewPassword)
         ]);
 
         return redirect()->route('account.login')->with('success', 'Your Have successfully change your password');

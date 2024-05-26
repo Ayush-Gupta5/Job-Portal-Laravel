@@ -7,12 +7,6 @@
                     <h2>Find Jobs</h2>
                 </div>
                 <div class="col-6 col-md-2">
-                    <div class="align-end">
-                        <select name="sort" id="sort" class="form-control">
-                            <option value="">Latest</option>
-                            <option value="">Oldest</option>
-                        </select>
-                    </div>
                 </div>
             </div>
 

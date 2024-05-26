@@ -62,7 +62,6 @@
                                 <a href="{{ route('jobs').'?category_id='. $category->id }}">
                                     <h4 class="pb-2">{{ $category->name }}</h4>
                                 </a>
-                                <p class="mb-0"> <span>0</span> Available position</p>
                             </div>
                         </div>
                     @endforeach
