@@ -164,6 +164,11 @@
                                         <span>{{ \Carbon\Carbon::parse($jobDetails->created_at)->format('d M, Y') }}</span>
                                     </li>
                                     <li>Vacancy: <span>{{ $jobDetails->Vacancy }} Position</span></li>
+                                    @if($jobDetails->experience == 'Fresher')
+                                    <li>Experience: <span>{{ $jobDetails->experience }}</span></li>
+                                    @else
+                                    <li>Experience: <span>{{ $jobDetails->experience }} Years</span></li>
+                                    @endif
                                     @if (!is_null($jobDetails->salary))
                                         <li>Salary: <span>{{ $jobDetails->salary }} LPA</span></li>
                                     @else
@@ -171,6 +176,7 @@
                                     @endif
                                     <li>Location: <span>{{ $jobDetails->location }}</span></li>
                                     <li>Job Nature: <span>{{ $jobDetails->jobType->name }}</span></li>
+                                    <li>Job Category: <span>{{ $jobDetails->jobCategory->name }}</span></li>
                                 </ul>
                             </div>
                         </div>

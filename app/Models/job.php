@@ -14,7 +14,7 @@ class job extends Model
     }
 
     public function jobCategory(){
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function applications(){

@@ -91,20 +91,26 @@ class AccountController extends Controller
     }
 
     public function emailVerify(Request $request)
-    {
+{
+    $token = DB::table('email_verify_tokens')->where('token', $request->token)->first();
 
-        $token = DB::table('email_verify_tokens')->where('token', $request->token)->first();
-
-        if ($token == null) {
-            return redirect()->route('account.forgotPassword')->with('error', 'Invalid token');
-        }
-
-        User::where('email', $token->email)->update([
-            'email_verified' => '1'
-        ]);
-
-        return redirect()->route('account.login')->with('success', 'Your Have successfully verify your email');
+    if ($token == null) {
+        return redirect()->route('account.login')->with('error', 'Invalid token');
     }
+
+    $user = User::where('email', $token->email)->first();
+
+    if ($user->email_verified == '1') {
+        return redirect()->route('account.login')->with('info', 'You have already verified your email, Please login.');
+    }
+
+    $user->update([
+        'email_verified' => '1' // Assuming email_verified is a boolean
+    ]);
+
+    return redirect()->route('account.login')->with('success', 'You have successfully verified your email, Please login.');
+}
+
 
 
     public function login()

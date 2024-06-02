@@ -17,8 +17,8 @@
             <li><strong>Email:</strong> {{ $mailData['user']->email }}</li>
             <li><strong>Mobile No:</strong> {{ $mailData['user']->mobile }}</li>
         </ul>
-        <p style="color: #666;">You can download the resume by clicking the link below:</p>
-        <a href="{{ asset('Resumes/' . urlencode($mailData['user']->resume)) }}" download="{{ $mailData['user']->name }}_resume.pdf" style="color: #007bff; text-decoration: none;">Download Resume</a>
+        <p style="color: #666;">You can download the resume that attached with email</p>
+        {{-- <a href="{{ asset('Resumes/' . urlencode($mailData['user']->resume)) }}" download="{{ $mailData['user']->name }}_resume.pdf" style="color: #007bff; text-decoration: none;">Download Resume</a> --}}
 
         <p style="color: #666;">Thank you.</p>
     </div>

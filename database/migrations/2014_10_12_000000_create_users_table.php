@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->boolean('email_verified')->default(0);
+            $table->string('email_verified')->default('0');
             $table->string('password');
             $table->string('mobile')->nullable();
             $table->string('designation')->nullable();
