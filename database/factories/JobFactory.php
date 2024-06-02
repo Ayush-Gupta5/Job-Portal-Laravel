@@ -22,6 +22,7 @@ class JobFactory extends Factory
             'category_id'=>rand(1,9),
             'job_type_id'=>rand(1,9),
             'Vacancy'=>rand(1,5),
+            'salary'=>rand(1,12),
             'location'=>Fake()->city,
             'description'=>Fake()->text,
             'experience'=>rand(1,10),

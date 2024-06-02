@@ -22,6 +22,9 @@ class CategoriesSeeder extends Seeder
             ['name' => 'Human Resources'],
             ['name' => 'Media & Communications'],
             ['name' => 'Healthcare & Medicine'],
+            ['name' => 'Mid-level'],
+            ['name' => 'Senior-level'],
+            ['name' => 'Volunteer'],
 
             // Add more categories as needed
 
