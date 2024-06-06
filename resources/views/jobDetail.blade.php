@@ -164,8 +164,8 @@
                                         <span>{{ \Carbon\Carbon::parse($jobDetails->created_at)->format('d M, Y') }}</span>
                                     </li>
                                     <li>Vacancy: <span>{{ $jobDetails->Vacancy }} Position</span></li>
-                                    @if($jobDetails->experience == 'Fresher')
-                                    <li>Experience: <span>{{ $jobDetails->experience }}</span></li>
+                                    @if($jobDetails->experience == 'F')
+                                    <li>Experience: <span>Fresher</span></li>
                                     @else
                                     <li>Experience: <span>{{ $jobDetails->experience }} Years</span></li>
                                     @endif
